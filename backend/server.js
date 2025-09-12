@@ -14,11 +14,11 @@ mongoose.connect(process.env.MONGOURI);
 
 app.post("/add",async(req,res)=>{
      try{
-        const {event,date,name} = req.body;
+        const {event,date,person} = req.body;
          const homedata = new home({
             event,
-            date,
-            name,
+            date:new Date(date),
+            person,
          })
 
          const saved = await homedata.save();
@@ -28,8 +28,22 @@ app.post("/add",async(req,res)=>{
          }
      }catch(err)
      {
-        res.status(400).json(err);
+        res.status(400).json(err.response.data);
      }
+})
+
+app.get("/getdata",async(req,res)=>
+{
+   try{
+      const val = await home.find();
+      res.status(200).json(val);
+   }
+   catch(err)
+   {
+      res.status(400).json(err);
+   }
+   
+
 })
 
 
