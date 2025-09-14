@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
-const home = require("./models/event.js");
+const Event = require("./models/event.js");
 
 const app = express();
 app.use(express.json());
@@ -12,37 +12,38 @@ const PORT = process.env.PORT || 6000;
 
 mongoose.connect(process.env.MONGOURI);
 
+// Add Event
 app.post("/add", async (req, res) => {
   try {
     const { event, date, person } = req.body;
-    const homedata = new home({
+    const newEvent = new Event({
       event,
-      date: new Date(date),
+      date: new Date(date), 
       person,
     });
 
-    const saved = await homedata.save();
-    if (saved) {
-      res.status(200).json(saved);
-    }
+    const saved = await newEvent.save();
+    res.status(200).json(saved);
   } catch (err) {
-    res.status(400).json(err.response?.data || err.message);
+    res.status(400).json({ error: err.message });
   }
 });
 
+
 app.get("/getdata", async (req, res) => {
   try {
-    const val = await home.find();
-    res.status(200).json(val);
+    const events = await Event.find();
+    res.status(200).json(events);
   } catch (err) {
-    res.status(400).json(err);
+    res.status(400).json({ error: err.message });
   }
 });
+
 
 app.post("/delete", async (req, res) => {
   try {
     const { id } = req.body;
-    const del = await home.findByIdAndDelete(id);
+    const del = await Event.findByIdAndDelete(id);
     if (del) {
       res.status(200).json({ message: "Deleted successfully" });
     } else {
@@ -53,6 +54,29 @@ app.post("/delete", async (req, res) => {
   }
 });
 
+app.get("/today-events", async (req, res) => {
+  try {
+    const start = new Date();
+    start.setUTCHours(0, 0, 0, 0);
+
+    const end = new Date();
+    end.setUTCHours(23, 59, 59, 999);
+
+    const events = await Event.find({
+      date: { $gte: start, $lte: end },
+    });
+
+    if (events.length === 0) {
+      return res.status(404).json({ message: "No events today" });
+    }
+
+    res.json(events);
+  } catch (error) {
+    console.error("Error fetching today's events:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 app.listen(PORT, () => {
-  console.log("server connected");
+  console.log("server connected on port " + PORT);
 });
