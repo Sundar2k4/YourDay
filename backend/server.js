@@ -56,26 +56,28 @@ app.post("/delete", async (req, res) => {
 
 app.get("/today-events", async (req, res) => {
   try {
-    const start = new Date();
-    start.setUTCHours(0, 0, 0, 0);
+    const today = new Date();
+    const todayMonth = today.getMonth(); 
+    const todayDay = today.getDate();
 
-    const end = new Date();
-    end.setUTCHours(23, 59, 59, 999);
+    const events = await Event.find();
 
-    const events = await Event.find({
-      date: { $gte: start, $lte: end },
+    const todaysEvents = events.filter((e) => {
+      const d = new Date(e.date);
+      return d.getMonth() === todayMonth && d.getDate() === todayDay;
     });
 
-    if (events.length === 0) {
+    if (todaysEvents.length === 0) {
       return res.status(404).json({ message: "No events today" });
     }
 
-    res.json(events);
+    res.json(todaysEvents);
   } catch (error) {
     console.error("Error fetching today's events:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
 
 app.listen(PORT, () => {
   console.log("server connected on port " + PORT);
