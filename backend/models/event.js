@@ -5,6 +5,7 @@ const homeSchema = new mongoose.Schema({
      },
      date:{type:Date,required:true},
      person:{type:String,required:true},
+     user :{type:mongoose.Schema.Types.ObjectId,ref:"User",required:true},
 })
 
 

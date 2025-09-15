@@ -11,6 +11,8 @@ const Home = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
     const gettoday = async () => {
       try {
         const response = await axios.get("http://localhost:5000/today-events");
