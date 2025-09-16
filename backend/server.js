@@ -16,15 +16,30 @@ const PORT = process.env.PORT || 6000;
 
 mongoose.connect(process.env.MONGOURI);
 
+const authenticate = async (req,res,next)=>{
+            try{
+                 const token = req.header("Authorization")?.replace("Bearer ","");
+                 if(!token) res.status(400).json("auth err");
+                 const decoded = jwt.verify(token,process.env.JWT_SECRET);
+                 const user = await log.findById(decoded.id);
+                 if(!user) res.status(401).json('user error');
+                 req.user = user;
+                 next();
+            }catch(err)
+            {
+              res.status(400).json(err);
+            }
+}
 
-app.post("/add", async (req, res) => {
+
+app.post("/add",authenticate, async (req, res) => {
   try {
     const { event, date, person } = req.body;
     const newEvent = new Event({
       event,
       date: new Date(date), 
       person,
-      user:req.user.id,
+      user:req.user._id,
     });
 
     const saved = await newEvent.save();
