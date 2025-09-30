@@ -22,7 +22,12 @@ const Show = () => {
 
   const handleclick = async (id) => {
     try {
-      const response = await axios.post("http://localhost:5000/delete", { id });
+      const token = localStorage.getItem("token");
+      const response = await axios.post(
+        "http://localhost:5000/delete",
+        { id },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
       if (response.status === 200) {
         setEvent(Event.filter((e) => e._id !== id));
         console.log("Deleted Successfully");
