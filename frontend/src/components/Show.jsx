@@ -6,9 +6,12 @@ const Show = () => {
   const [Event, setEvent] = useState([]);
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
     const fetchevents = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/getdata");
+        const response = await axios.get("http://localhost:5000/getdata", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         setEvent(response.data);
       } catch (error) {
         console.error("Error fetching events:", error);

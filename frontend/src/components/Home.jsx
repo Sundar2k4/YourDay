@@ -29,18 +29,30 @@ const Home = () => {
   const handlesubmit = async (e) => {
     e.preventDefault();
     try {
-      const data = await axios.post("http://localhost:5000/add", {
-        event: Event,
-        date: Date,
-        person: Name,
+      const token = localStorage.getItem("token");
+      const response = await fetch("http://localhost:5000/add", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          event: Event,
+          date: Date,
+          person: Name,
+        }),
       });
-      if (data.status === 200) {
+  
+      if (response.status === 200) {
         console.log("saved");
+      } else {
+        console.error("Save failed:", response.status);
       }
     } catch (error) {
       console.error("Error saving data:", error);
     }
   };
+  
 
   return (
     <div className="bg-black min-h-screen">
@@ -110,7 +122,7 @@ const Home = () => {
           </div>
           <button
             type="submit"
-            className="mt-6 w-full bg-black text-yellow-200 hover:bg-yellow-300 hover:text-black rounded-xl p-2 font-bold transition"
+            className="mt-6 w-full bg-black text-yellow-200 hover:bg-yellow-300 hover:text-black rounded-xl p-2 font-bold transition hover:cursor-pointer"
             onClick={() => {
               navigate("/events");
             }}

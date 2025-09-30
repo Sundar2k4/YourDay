@@ -1,20 +1,25 @@
-import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import api from "../api";
 const Login = () => {
   const [Pass, setPass] = useState("");
   const [Email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handlesubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+
     try {
-      const response = await axios.post("http://localhost:5000/log", {
+      const response = await api.post("http://localhost:5000/log", {
         email: Email,
         password: Pass,
       });
+
       localStorage.setItem("token", response.data.token);
+      console.log("Token stored:", response.data.token);
+
       if (response.status === 200) {
         alert("Logged In");
         navigate("/");
@@ -22,24 +27,32 @@ const Login = () => {
         alert("Error while logging in");
       }
     } catch (error) {
-      alert("Login failed");
-      console.error(error);
+      console.error("Login error:", error);
+
+      if (error.response) {
+        alert(error.response.data.error || "Login failed");
+      } else {
+        alert("Network error. Please try again.");
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100">
+    <div className="min-h-screen flex flex-col justify-center items-center bg-black">
       <form
         onSubmit={handlesubmit}
         className="bg-white p-8 rounded-xl shadow-md w-80 flex flex-col"
       >
-        <h1 className="text-3xl p-5">Login</h1>
+        <h1 className="text-3xl p-5 ">Login</h1>
         <input
-          type="text"
+          type="email"
           placeholder="Email"
           value={Email}
           onChange={(e) => setEmail(e.target.value)}
           className="mb-4 p-2 border border-gray-300 rounded"
+          required
         />
         <input
           type="password"
@@ -47,12 +60,14 @@ const Login = () => {
           value={Pass}
           onChange={(e) => setPass(e.target.value)}
           className="mb-6 p-2 border border-gray-300 rounded"
+          required
         />
         <button
           type="submit"
-          className="bg-black text-yellow-200 hover:bg-yellow-300 hover:text-black rounded-xl p-3 font-bold transition"
+          disabled={loading}
+          className="bg-black text-yellow-200 hover:bg-yellow-300 hover:text-black rounded-xl p-3 font-bold transition disabled:opacity-50 hover:cursor-pointer"
         >
-          Login
+          {loading ? "Logging in..." : "Login"}
         </button>
       </form>
     </div>

@@ -14,7 +14,7 @@ const Register = () => {
         email: Email,
         password: Pass,
       });
-      if (response.status === 200) {
+      if (response.status === 201) {
         alert("Registered Successfully");
         navigate("/logg");
       } else {
@@ -51,8 +51,14 @@ const Register = () => {
           type="submit"
           className="bg-black text-yellow-200 hover:bg-yellow-300 hover:text-black rounded-xl p-3 font-bold transition"
         >
-          Submit
+          Register
         </button>
+        <p className="mt-5">
+          Already Registered?{" "}
+          <a href="/logg" className="text-sky-800">
+            Login Here
+          </a>
+        </p>
       </form>
     </div>
   );
