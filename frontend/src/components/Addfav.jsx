@@ -6,6 +6,9 @@ const Addfav = () => {
   const location = useLocation();
   const [Favs, setFavs] = useState("");
   const [Name, setName] = useState("");
+  const itemsarray = Favs.split(",")
+    .map((item) => item.trim())
+    .filter((item) => item.length > 0);
   const navigate = useNavigate();
   useEffect(() => {
     if (location.state) {
@@ -22,8 +25,14 @@ const Addfav = () => {
         "content-type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ name: Name, items: Favs }),
+      body: JSON.stringify({ name: Name, items: itemsarray }),
     });
+    if (data.ok) {
+      navigate("/");
+    } else {
+      const errr = await data.json();
+      alert("failed adding favourites", errr);
+    }
   };
 
   return (
@@ -63,9 +72,6 @@ const Addfav = () => {
           <button
             type="submit"
             className="mt-6 w-full bg-black text-yellow-200 hover:bg-yellow-300 hover:text-black rounded-xl p-2 font-bold transition hover:cursor-pointer"
-            onClick={() => {
-              navigate("/");
-            }}
           >
             Save
           </button>

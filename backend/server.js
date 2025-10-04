@@ -165,21 +165,27 @@ app.post("/log", async (req, res) => {
     }
 });
 
-app.post('/addfav',authenticate, async (req, res) => {
+app.post('/addfav', authenticate, async (req, res) => {
     try {
-        const { name, items } = req.body;
-        const newfav = new Fav({
-            name,
-            items,
-        });
-
+      const { name, items } = req.body;
+  
+      let person = await Fav.findOne({ name });
+  
+      if (person) {
+        const updatedItems = Array.from(new Set([...person.items, ...items]));
+        person.items = updatedItems;
+        await person.save();
+        res.status(200).send(person);
+      } else {
+        const newfav = new Fav({ name, items });
         await newfav.save();
         res.status(201).send(newfav);
+      }
     } catch (error) {
-        res.status(500).send({ error: error.message });
+      res.status(500).send({ error: error.message });
     }
-});
-
+  });
+  
 
 app.listen(PORT, () => {
     console.log("server connected on port " + PORT);
