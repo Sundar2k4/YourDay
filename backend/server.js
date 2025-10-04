@@ -185,6 +185,16 @@ app.post('/addfav', authenticate, async (req, res) => {
       res.status(500).send({ error: error.message });
     }
   });
+
+  app.get('/getfav', authenticate, async (req, res) => {
+    try {
+      const data = await Fav.find(); 
+      res.status(200).json(data);
+    } catch (err) {
+      res.status(500).json({ error: "Failed to fetch favorites", details: err.message });
+    }
+  });
+  
   
 
 app.listen(PORT, () => {

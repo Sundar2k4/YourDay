@@ -15,7 +15,6 @@ const Register = () => {
         password: Pass,
       });
       if (response.status === 201) {
-        alert("Registered Successfully");
         navigate("/logg");
       } else {
         alert("Error during registration");
