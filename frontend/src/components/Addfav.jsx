@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Nav from "./Nav";
+import axios from "axios";
 
 const Addfav = () => {
   const location = useLocation();
   const [Favs, setFavs] = useState("");
   const [Name, setName] = useState("");
+  const [Usermail, setUsermail] = useState("");
   const itemsarray = Favs.split(",")
     .map((item) => item.trim())
     .filter((item) => item.length > 0);
@@ -15,6 +17,23 @@ const Addfav = () => {
       setName(location.state);
     }
   }, [location.state]);
+
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    const fetchusermail = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/getmail", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setUsermail(response.data.email || response.data.email);
+      } catch (error) {
+        console.error("Failed to fetch user mail:", error);
+      }
+    };
+    fetchusermail();
+  }, [token]);
+
   const handlesubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
@@ -25,7 +44,7 @@ const Addfav = () => {
         "content-type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ name: Name, items: itemsarray }),
+      body: JSON.stringify({ email: Usermail, name: Name, items: itemsarray }),
     });
     if (data.ok) {
       navigate("/");
@@ -45,6 +64,16 @@ const Addfav = () => {
         >
           <div className="flex flex-col space-y-4">
             <p className="font-bold text-4xl">Enter the Favourites:</p>
+            <label htmlFor="name" className="font-bold">
+              UserMail:
+            </label>
+            <input
+              type="text"
+              readOnly
+              id="name"
+              value={Usermail}
+              className="rounded p-2 border border-gray-400 focus:outline-none focus:border-black"
+            />
             <label htmlFor="name" className="font-bold">
               Name:
             </label>

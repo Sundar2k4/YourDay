@@ -167,7 +167,7 @@ app.post("/log", async (req, res) => {
 
 app.post('/addfav', authenticate, async (req, res) => {
     try {
-      const { name, items } = req.body;
+      const { email, name, items } = req.body;
   
       let person = await Fav.findOne({ name });
   
@@ -177,7 +177,7 @@ app.post('/addfav', authenticate, async (req, res) => {
         await person.save();
         res.status(200).send(person);
       } else {
-        const newfav = new Fav({ name, items });
+        const newfav = new Fav({ email, name, items });
         await newfav.save();
         res.status(201).send(newfav);
       }
@@ -188,10 +188,25 @@ app.post('/addfav', authenticate, async (req, res) => {
 
   app.get('/getfav', authenticate, async (req, res) => {
     try {
-      const data = await Fav.find(); 
+      const mail = req.user.email;
+      const data = await Fav.find({email:mail}); 
       res.status(200).json(data);
     } catch (err) {
       res.status(500).json({ error: "Failed to fetch favorites", details: err.message });
+    }
+  });
+
+  app.get('/getmail', authenticate, async (req, res) => {
+    const email = req.user.email;
+    try {
+      const mails = await log.findOne({ email });
+      if (mails) {
+        res.status(200).json(mails);
+      } else {
+        res.status(404).json({ error: "User not found" });
+      }
+    } catch (err) {
+      res.status(500).json({ error: err.message });
     }
   });
   
