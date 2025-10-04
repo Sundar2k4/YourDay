@@ -1,9 +1,11 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import Nav from "./Nav";
+import { useNavigate } from "react-router-dom";
 
 const Show = () => {
   const [Event, setEvent] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -55,6 +57,9 @@ const Show = () => {
               Date
             </th>
             <th className="border border-yellow-200 px-4 py-2 bg-black text-yellow-400 text-left">
+              Favourites
+            </th>
+            <th className="border border-yellow-200 px-4 py-2 bg-black text-yellow-400 text-left">
               Delete
             </th>
           </tr>
@@ -71,6 +76,16 @@ const Show = () => {
               <td className="border border-yellow-200 px-4 py-2 text-yellow-200">
                 {new Date(eve.date).toLocaleDateString()}
               </td>
+              <td className="hover:cursor-pointer border border-yellow-400 px-4 py-2 text-yellow-400">
+                <button
+                  className="bg-black text-yellow-200 hover:bg-yellow-300 hover:text-black rounded-xl p-3 font-bold transition hover:cursor-pointer"
+                  onClick={() => {
+                    navigate("/addfav", { state: eve.person });
+                  }}
+                >
+                  +fav
+                </button>
+              </td>
               <td
                 className="hover:cursor-pointer border border-yellow-400 px-4 py-2 text-yellow-400"
                 onClick={() => {
@@ -84,7 +99,7 @@ const Show = () => {
                   strokeWidth="1.5"
                   stroke="currentColor"
                   className="w-6 h-6"
-                  style={{ color: "#FBBF24" }} // Tailwind yellow-400 color hex
+                  style={{ color: "#FBBF24" }}
                 >
                   <path
                     strokeLinecap="round"

@@ -21,7 +21,6 @@ const Login = () => {
       console.log("Token stored:", response.data.token);
 
       if (response.status === 200) {
-        alert("Logged In");
         navigate("/");
       } else {
         alert("Error while logging in");

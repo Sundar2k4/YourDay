@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Nav from "./Nav";
 import { useNavigate } from "react-router-dom";
+import Favorite from "./Favorite";
 
 const Home = () => {
   const [Event, setEvent] = useState("");
@@ -15,7 +16,9 @@ const Home = () => {
     if (!token) return;
     const gettoday = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/today-events");
+        const response = await axios.get("http://localhost:5000/today-events", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         if (response.status === 200) {
           setToday(response.data);
         }
@@ -34,7 +37,7 @@ const Home = () => {
         method: "POST",
         headers: {
           "content-type": "application/json",
-          "Authorization": `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           event: Event,
@@ -42,7 +45,7 @@ const Home = () => {
           person: Name,
         }),
       });
-  
+
       if (response.status === 200) {
         console.log("saved");
       } else {
@@ -52,7 +55,6 @@ const Home = () => {
       console.error("Error saving data:", error);
     }
   };
-  
 
   return (
     <div className="bg-black min-h-screen">
@@ -131,6 +133,7 @@ const Home = () => {
           </button>
         </form>
       </div>
+      <Favorite />
     </div>
   );
 };

@@ -6,6 +6,7 @@ const Event = require("./models/event.js");
 const log = require("./models/log.js");
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const Fav = require("./models/fav.js");
 
 const app = express();
 app.use(express.json());
@@ -163,6 +164,22 @@ app.post("/log", async (req, res) => {
         res.status(500).json({ error: "Server error" });
     }
 });
+
+app.post('/addfav',authenticate, async (req, res) => {
+    try {
+        const { name, items } = req.body;
+        const newfav = new Fav({
+            name,
+            items,
+        });
+
+        await newfav.save();
+        res.status(201).send(newfav);
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+});
+
 
 app.listen(PORT, () => {
     console.log("server connected on port " + PORT);
