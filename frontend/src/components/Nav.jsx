@@ -18,12 +18,14 @@ const Nav = () => {
         <ul className="flex space-x-8">
           <li>
             <div className="flex items-center space-x-4">
-              <a
-                href="/events"
-                className="text-black font-semibold hover:underline"
+              <button
+                className="hover:cursor-pointer text-black font-semibold underline"
+                onClick={() => {
+                  navigate("/events");
+                }}
               >
                 Events
-              </a>
+              </button>
               {token ? (
                 <button
                   className="mt-2 w-full bg-black text-yellow-200 hover:bg-yellow-300 hover:text-black rounded-xl p-2 font-bold transition"
