@@ -12,10 +12,13 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const response = await api.post("http://localhost:5000/log", {
-        email: Email,
-        password: Pass,
-      });
+      const response = await api.post(
+        "https://yourday-backend-0j79.onrender.com/log",
+        {
+          email: Email,
+          password: Pass,
+        }
+      );
 
       localStorage.setItem("token", response.data.token);
       console.log("Token stored:", response.data.token);

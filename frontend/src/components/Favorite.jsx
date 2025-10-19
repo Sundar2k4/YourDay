@@ -8,9 +8,12 @@ const Favorite = () => {
   useEffect(() => {
     const fetchFavorites = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/getfav", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await axios.get(
+          "https://yourday-backend-0j79.onrender.com/getfav",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         setLikes(response.data);
       } catch (error) {
         console.error("Error fetching favorites:", error);

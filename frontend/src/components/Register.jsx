@@ -10,10 +10,13 @@ const Register = () => {
   const handlesubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/reg", {
-        email: Email,
-        password: Pass,
-      });
+      const response = await axios.post(
+        "https://yourday-backend-0j79.onrender.com/reg",
+        {
+          email: Email,
+          password: Pass,
+        }
+      );
       if (response.status === 201) {
         navigate("/logg");
       } else {

@@ -23,9 +23,12 @@ const Addfav = () => {
   useEffect(() => {
     const fetchusermail = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/getmail", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await axios.get(
+          "https://yourday-backend-0j79.onrender.com/getmail",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         setUsermail(response.data.email || response.data.email);
       } catch (error) {
         console.error("Failed to fetch user mail:", error);
@@ -38,14 +41,21 @@ const Addfav = () => {
     e.preventDefault();
     const token = localStorage.getItem("token");
     if (!token) return;
-    const data = await fetch("http://localhost:5000/addfav", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ email: Usermail, name: Name, items: itemsarray }),
-    });
+    const data = await fetch(
+      "https://yourday-backend-0j79.onrender.com/addfav",
+      {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          email: Usermail,
+          name: Name,
+          items: itemsarray,
+        }),
+      }
+    );
     if (data.ok) {
       navigate("/");
     } else {

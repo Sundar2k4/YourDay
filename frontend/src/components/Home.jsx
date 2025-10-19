@@ -16,9 +16,12 @@ const Home = () => {
     if (!token) return;
     const gettoday = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/today-events", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await axios.get(
+          "https://yourday-backend-0j79.onrender.com/today-events",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         if (response.status === 200) {
           setToday(response.data);
         }
@@ -33,18 +36,21 @@ const Home = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("http://localhost:5000/add", {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          event: Event,
-          date: Date,
-          person: Name,
-        }),
-      });
+      const response = await fetch(
+        "https://yourday-backend-0j79.onrender.com/add",
+        {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            event: Event,
+            date: Date,
+            person: Name,
+          }),
+        }
+      );
 
       if (response.status === 200) {
         console.log("saved");

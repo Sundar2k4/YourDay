@@ -11,9 +11,12 @@ const Show = () => {
     const token = localStorage.getItem("token");
     const fetchevents = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/getdata", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await axios.get(
+          "https://yourday-backend-0j79.onrender.com/getdata",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         setEvent(response.data);
       } catch (error) {
         console.error("Error fetching events:", error);
@@ -26,7 +29,7 @@ const Show = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
-        "http://localhost:5000/delete",
+        "https://yourday-backend-0j79.onrender.com/delete",
         { id },
         { headers: { Authorization: `Bearer ${token}` } }
       );
