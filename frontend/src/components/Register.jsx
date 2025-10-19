@@ -57,9 +57,14 @@ const Register = () => {
         </button>
         <p className="mt-5">
           Already Registered?{" "}
-          <a href="/logg" className="text-sky-800">
-            Login Here
-          </a>
+          <button
+            className="hover:cursor-pointer text-sky-800"
+            onClick={() => {
+              navigate("/logg");
+            }}
+          >
+            Login here!
+          </button>
         </p>
       </form>
     </div>
